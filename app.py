@@ -3,6 +3,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+
 notes = []
 next_id = 1
 
@@ -14,7 +15,7 @@ def home():
 
 @app.route("/notes", methods=["GET"])
 def get_notes():
-    return jsonify(notes)
+    return jsonify(notes)   #Check this return type ASAP
 
 
 @app.route("/notes/<int:note_id>", methods=["GET"])
@@ -35,7 +36,7 @@ def create_note():
         "id": next_id,
         "title": data["title"],
         "content": data["content"],
-        "created_at": datetime.now().isoformat()
+        "created_at": datetime.now().isoformat() 
     }
 
     notes.append(note)
@@ -66,3 +67,5 @@ def delete_note(note_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
+    
