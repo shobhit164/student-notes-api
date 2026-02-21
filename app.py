@@ -10,7 +10,7 @@ next_id = 1
 
 @app.route("/")
 def home():
-    return {"message": "Student Notes API running"}
+    return {"message": "CI/CD is working "}
 
 
 @app.route("/notes", methods=["GET"])
