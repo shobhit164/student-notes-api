@@ -61,7 +61,7 @@ def update_note(note_id):
         return jsonify({"error": validation_error}), 400
 
     note.title = payload["title"].strip()
-    note.content = payload["content"].strip()
+    note.content = payload["content"].strip() # Added the .strip() function
     note.course = payload["course"].strip()
     db.session.commit()
 
