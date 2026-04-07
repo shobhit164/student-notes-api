@@ -31,10 +31,22 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      RAW_AZURE_VM_HOST: ${{ secrets.AZURE_VM_HOST }}
+      RAW_AZURE_VM_USER: ${{ secrets.AZURE_VM_USER }}
+      RAW_AZURE_VM_APP_PATH: ${{ secrets.AZURE_VM_APP_PATH }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Normalize Azure deployment values
+        run: |
+          {
+            printf 'AZURE_VM_HOST=%s\n' "$(printf '%s' "$RAW_AZURE_VM_HOST" | tr -d '\r\n')"
+            printf 'AZURE_VM_USER=%s\n' "$(printf '%s' "$RAW_AZURE_VM_USER" | tr -d '\r\n')"
+            printf 'AZURE_VM_APP_PATH=%s\n' "$(printf '%s' "$RAW_AZURE_VM_APP_PATH" | tr -d '\r\n')"
+          } >> "$GITHUB_ENV"
 
       - name: Start SSH agent and add key
         uses: webfactory/ssh-agent@v0.9.0
@@ -44,16 +56,16 @@ jobs:
       - name: Add Azure VM host to known_hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.AZURE_VM_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$AZURE_VM_HOST" >> ~/.ssh/known_hosts
 
       - name: Sync project files to Azure VM
         run: |
           rsync -avz --delete \
             --exclude ".git" \
             --exclude ".github" \
-            ./ ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_HOST }}:${{ secrets.AZURE_VM_APP_PATH }}
+            ./ "$AZURE_VM_USER@$AZURE_VM_HOST:$AZURE_VM_APP_PATH"
 
       - name: Restart application on Azure VM
         run: |
-          ssh ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_HOST }} \
-            "cd ${{ secrets.AZURE_VM_APP_PATH }} && chmod +x deploy/azure-vm/deploy.sh && ./deploy/azure-vm/deploy.sh"
+          ssh "$AZURE_VM_USER@$AZURE_VM_HOST" \
+            "cd '$AZURE_VM_APP_PATH' && chmod +x deploy/azure-vm/deploy.sh && ./deploy/azure-vm/deploy.sh"
