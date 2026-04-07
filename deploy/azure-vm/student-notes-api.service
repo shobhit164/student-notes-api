@@ -1,0 +1,14 @@
+[Unit]
+Description=Student Notes Flask API
+After=network.target
+
+[Service]
+User=azureuser
+WorkingDirectory=/opt/student-notes-api
+Environment="PATH=/opt/student-notes-api/.venv/bin"
+ExecStart=/opt/student-notes-api/.venv/bin/python run.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
