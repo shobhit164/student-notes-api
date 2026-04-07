@@ -10,7 +10,7 @@ def _validate_payload(payload):
         return "Request body must be valid JSON."
 
     required_fields = ("title", "content", "course")
-    missing = [field for field in required_fields if not payload.get(field)]
+    missing = [field for field in required_fields if not payload.get(field)] #changed the If condition
     if missing:
         return f"Missing required fields: {', '.join(missing)}."
 
@@ -27,7 +27,7 @@ def list_notes():
 def get_note(note_id):
     note = db.session.get(Note, note_id)
     if note is None:
-        return jsonify({"error": f"Note with id {note_id} not found."}), 404
+        return jsonify({"error": f"Note with id {note_id} not found."}), 404 # Shobit check the note_id
     return jsonify(note.to_dict()), 200
 
 
@@ -72,7 +72,7 @@ def update_note(note_id):
 def delete_note(note_id):
     note = db.session.get(Note, note_id)
     if note is None:
-        return jsonify({"error": f"Note with id {note_id} not found."}), 404
+        return jsonify({"error": f"Note with id {note_id} not found."}), 404 # sanjay check this note
 
     db.session.delete(note)
     db.session.commit()
