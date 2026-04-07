@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Notes Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-card">
+        <div class="hero-topbar">
+          <p class="eyebrow">CSD-4503 DevOps Project</p>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">Dark Mode</button>
+        </div>
+        <h1>Student Notes Dashboard</h1>
+        <p class="hero-copy">Create, update, and organize course notes from a browser while the same Flask app continues powering your API, tests, CI/CD pipeline, and Azure deployment.</p>
+      </section>
+
+      <section class="workspace-grid">
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <h2>{{ 'Edit Note' if edit_note else 'Create Note' }}</h2>
+            <p>{{ 'Update the selected note and save your changes.' if edit_note else 'Add a new note for your course work.' }}</p>
+          </div>
+
+          {% if error %}
+            <div class="alert">{{ error }}</div>
+          {% endif %}
+
+          <form method="post" action="{{ url_for('web.update_note_page', note_id=edit_note.id) if edit_note else url_for('web.create_note_page') }}" class="note-form">
+            <label>
+              Title
+              <input type="text" name="title" placeholder="Exam Prep" value="{{ form_data.get('title', '') }}">
+            </label>
+
+            <label>
+              Course
+              <input type="text" name="course" placeholder="CSD-4503" value="{{ form_data.get('course', '') }}">
+            </label>
+
+            <label>
+              Content
+              <textarea name="content" rows="8" placeholder="Write your note details here...">{{ form_data.get('content', '') }}</textarea>
+            </label>
+
+            <div class="form-actions">
+              <button type="submit" class="primary-btn">{{ 'Save Changes' if edit_note else 'Create Note' }}</button>
+              {% if edit_note %}
+                <a href="{{ url_for('web.home') }}" class="secondary-link">Cancel Edit</a>
+              {% endif %}
+            </div>
+          </form>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel-heading">
+            <h2>Saved Notes</h2>
+            <p>{{ notes|length }} note{{ '' if notes|length == 1 else 's' }} available</p>
+          </div>
+
+          {% if notes %}
+            <div class="notes-list">
+              {% for note in notes %}
+                <article class="note-card">
+                  <div class="note-meta">
+                    <span class="course-pill">{{ note.course }}</span>
+                    <span class="timestamp">Updated {{ note.updated_at.strftime('%b %d, %Y %H:%M') }}</span>
+                  </div>
+                  <h3>{{ note.title }}</h3>
+                  <p>{{ note.content }}</p>
+                  <div class="card-actions">
+                    <a href="{{ url_for('web.edit_note_page', note_id=note.id) }}" class="secondary-link">Edit</a>
+                    <form method="post" action="{{ url_for('web.delete_note_page', note_id=note.id) }}" onsubmit="return confirm('Delete this note?');">
+                      <button type="submit" class="danger-btn">Delete</button>
+                    </form>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <h3>No notes yet</h3>
+              <p>Create your first note to see it appear here.</p>
+            </div>
+          {% endif %}
+        </section>
+      </section>
+    </main>
+    <script>
+      const root = document.documentElement;
+      const toggle = document.getElementById("theme-toggle");
+      const savedTheme = localStorage.getItem("student-notes-theme");
+
+      const applyTheme = (theme) => {
+        root.setAttribute("data-theme", theme);
+        toggle.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+      };
+
+      applyTheme(savedTheme || "light");
+
+      toggle.addEventListener("click", () => {
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        localStorage.setItem("student-notes-theme", nextTheme);
+        applyTheme(nextTheme);
+      });
+    </script>
+  </body>
+</html>

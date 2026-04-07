@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 
 from .models import db
 from .routes import notes_bp
+from .web_routes import web_bp
 
 
 def create_app(test_config=None):
@@ -11,12 +12,14 @@ def create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         JSON_SORT_KEYS=False,
         TESTING=False,
+        SECRET_KEY="student-notes-dev-key",
     )
 
     if test_config:
         app.config.update(test_config)
 
     db.init_app(app)
+    app.register_blueprint(web_bp)
     app.register_blueprint(notes_bp, url_prefix="/api/notes")
 
     @app.get("/health")
@@ -35,4 +38,3 @@ def create_app(test_config=None):
         db.create_all()
 
     return app
-

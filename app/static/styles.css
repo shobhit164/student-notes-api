@@ -1,0 +1,264 @@
+[data-theme="light"] {
+  --bg: #f4efe7;
+  --panel: rgba(255, 255, 255, 0.76);
+  --panel-border: rgba(53, 42, 33, 0.14);
+  --text: #1e1a16;
+  --muted: #65584f;
+  --accent: #1f6f5f;
+  --accent-strong: #155447;
+  --accent-soft: #dff1eb;
+  --danger: #a33b2d;
+  --shadow: 0 24px 60px rgba(47, 34, 21, 0.12);
+}
+
+[data-theme="dark"] {
+  --bg: #11161d;
+  --panel: rgba(21, 28, 39, 0.78);
+  --panel-border: rgba(181, 199, 221, 0.14);
+  --text: #eff5ff;
+  --muted: #a5b4c7;
+  --accent: #6fd0bc;
+  --accent-strong: #b5fff1;
+  --accent-soft: rgba(111, 208, 188, 0.14);
+  --danger: #ff8c7d;
+  --shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(31, 111, 95, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(214, 145, 92, 0.18), transparent 26%),
+    linear-gradient(160deg, #f8f4ee 0%, var(--bg) 100%);
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 48px;
+}
+
+.hero-card,
+.panel {
+  backdrop-filter: blur(18px);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.hero-card {
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.hero-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 0.96;
+  margin-bottom: 14px;
+  letter-spacing: -0.04em;
+}
+
+.hero-copy,
+.panel-heading p,
+.note-card p,
+.empty-state p,
+.timestamp {
+  color: var(--muted);
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+}
+
+.panel {
+  padding: 24px;
+}
+
+.panel-heading {
+  margin-bottom: 18px;
+}
+
+.note-form,
+.note-form label {
+  display: grid;
+  gap: 10px;
+}
+
+.note-form label {
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+input,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(53, 42, 33, 0.16);
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text);
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid rgba(31, 111, 95, 0.22);
+  border-color: rgba(31, 111, 95, 0.46);
+}
+
+.form-actions,
+.card-actions,
+.note-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.primary-btn,
+.danger-btn,
+.theme-toggle {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.primary-btn {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.primary-btn:hover,
+.danger-btn:hover,
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  opacity: 0.94;
+}
+
+.theme-toggle {
+  background: rgba(30, 26, 22, 0.08);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.secondary-link {
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.danger-btn {
+  background: rgba(163, 59, 45, 0.1);
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.alert {
+  background: rgba(163, 59, 45, 0.1);
+  color: var(--danger);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.notes-list {
+  display: grid;
+  gap: 16px;
+}
+
+.note-card {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(53, 42, 33, 0.12);
+  border-radius: 22px;
+  padding: 20px;
+}
+
+[data-theme="dark"] .note-card,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .theme-toggle {
+  background: rgba(15, 20, 29, 0.82);
+}
+
+.course-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.empty-state {
+  border: 1px dashed rgba(53, 42, 33, 0.18);
+  border-radius: 22px;
+  padding: 30px;
+  text-align: center;
+}
+
+.card-actions form {
+  margin: 0;
+}
+
+@media (max-width: 920px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-shell {
+    width: min(100% - 20px, 1180px);
+    padding-top: 20px;
+  }
+
+  .hero-topbar,
+  .form-actions,
+  .card-actions,
+  .note-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

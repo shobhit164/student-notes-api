@@ -1,10 +1,10 @@
 # Student Notes API
 
-This project implements the proposal for a DevOps-focused Student Notes API using Flask, automated testing, GitHub Actions CI/CD, and Azure VM deployment.
+This project implements the proposal for a DevOps-focused Student Notes application using Flask, automated testing, GitHub Actions CI/CD, an Azure VM deployment flow, and a browser-based UI for notes management.
 
 ## Features
 
-- Create, read, update, and delete student notes
+- Create, read, update, and delete student notes through both a web UI and REST API
 - JSON-based REST API built with Flask
 - SQLite-backed persistence using SQLAlchemy
 - Automated testing with `pytest`
@@ -16,9 +16,12 @@ This project implements the proposal for a DevOps-focused Student Notes API usin
 ```text
 .
 |-- app/
+|   |-- static/styles.css
+|   |-- templates/index.html
 |   |-- __init__.py
 |   |-- models.py
-|   `-- routes.py
+|   |-- routes.py
+|   `-- web_routes.py
 |-- deploy/azure-vm/
 |   |-- deploy.sh
 |   |-- setup-server.sh
@@ -45,13 +48,25 @@ This project implements the proposal for a DevOps-focused Student Notes API usin
    pip install -r requirements.txt
    ```
 
-3. Run the API:
+3. Run the application:
 
    ```bash
    python run.py
    ```
 
-4. The application will be available at `http://127.0.0.1:5000`.
+4. Open the app in your browser:
+
+   - UI: `http://127.0.0.1:5000/`
+   - Health check: `http://127.0.0.1:5000/health`
+   - API: `http://127.0.0.1:5000/api/notes`
+
+## UI Routes
+
+- `GET /` - dashboard with create and edit forms
+- `POST /notes/create` - create a note from the browser
+- `GET /notes/<id>/edit` - open a note in edit mode
+- `POST /notes/<id>/edit` - save note updates
+- `POST /notes/<id>/delete` - delete a note
 
 ## API Endpoints
 
@@ -63,18 +78,6 @@ This project implements the proposal for a DevOps-focused Student Notes API usin
 | POST | `/api/notes` | Create a new note |
 | PUT | `/api/notes/<id>` | Update an existing note |
 | DELETE | `/api/notes/<id>` | Delete a note |
-
-### Example Create Request
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/notes \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Exam Prep",
-    "content": "Review branching strategies and CI/CD workflow stages.",
-    "course": "CSD-4503"
-  }'
-```
 
 ## Running Tests
 
@@ -94,13 +97,13 @@ Add these repository secrets before enabling automatic deployment:
 ## Azure VM Deployment Flow
 
 1. Run `deploy/azure-vm/setup-server.sh` once on the VM.
-2. Copy the repository to the VM path that matches `AZURE_VM_APP_PATH`.
-3. Update `deploy/azure-vm/student-notes-api.service` if your VM username or install path differs.
-4. Push to `main` to trigger tests and deployment.
+2. Make sure `AZURE_VM_APP_PATH` matches your VM deployment directory.
+3. Push to `main` to trigger tests and deployment.
+4. After deployment, open the app through your VM host and configured port or reverse proxy.
 
 ## Suggested Next Steps
 
-- Add authentication for multi-user support
+- Add Nginx so the UI is reachable on port 80
 - Replace SQLite with PostgreSQL for production scale
-- Put Nginx in front of the Flask app
+- Add authentication for multi-user support
 - Add monitoring with Prometheus and Grafana
